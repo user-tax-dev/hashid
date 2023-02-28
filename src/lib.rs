@@ -1,3 +1,4 @@
+#[allow(non_snake_case)]
 use blake3::{hash, Hasher};
 use wasm_bindgen::prelude::*;
 
