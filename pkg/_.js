@@ -114,6 +114,13 @@ class HashId {
         }
     }
     /**
+    * @returns {number}
+    */
+    maxId() {
+        const ret = wasm.hashid_maxId(this.ptr);
+        return ret >>> 0;
+    }
+    /**
     * @param {Uint8Array} bin
     * @returns {HashId}
     */

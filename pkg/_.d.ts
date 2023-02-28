@@ -22,6 +22,10 @@ export class HashId {
 */
   dump(): Uint8Array;
 /**
+* @returns {number}
+*/
+  maxId(): number;
+/**
 * @param {Uint8Array} bin
 * @returns {HashId}
 */

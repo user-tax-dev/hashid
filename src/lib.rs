@@ -30,6 +30,13 @@ impl HashId {
     self.write_to_vec().unwrap()
   }
 
+  pub fn maxId(&self) -> u32 {
+    match self.0.values().max() {
+      Some(r) => *r,
+      _ => 0,
+    }
+  }
+
   #[wasm_bindgen]
   pub fn load(bin: &[u8]) -> HashId {
     HashId::read_from_buffer(bin).unwrap()
