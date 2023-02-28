@@ -8,16 +8,24 @@ use :
 ```coffee
 #!/usr/bin/env coffee
 
-> ./pkg/_ > Blake3 blake3Hash
+> ./pkg/_ > HashId
 
-hash = new Blake3
+m = new HashId
 
-hash.update new Uint8Array(1)
-hash.update new Uint8Array(2)
+m.set(
+  new Uint8Array(1)
+  2
+)
 
-console.log hash.finalize()
+console.log m.dump()
 
-console.log blake3Hash(new Uint8Array(3))
+m = HashId.load m.dump()
+
+console.log(
+  m.get(
+    new Uint8Array(1)
+  )
+)
 ```
 
 

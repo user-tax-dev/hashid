@@ -41,70 +41,69 @@ function getInt32Memory0() {
 function getArrayU8FromWasm0(ptr, len) {
     return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
 }
-/**
-* @param {Uint8Array} input
-* @returns {Uint8Array}
-*/
-module.exports.blake3Hash = function(input) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        const ptr0 = passArray8ToWasm0(input, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        wasm.blake3Hash(retptr, ptr0, len0);
-        var r0 = getInt32Memory0()[retptr / 4 + 0];
-        var r1 = getInt32Memory0()[retptr / 4 + 1];
-        var v1 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1);
-        return v1;
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
 
-const Blake3Finalization = new FinalizationRegistry(ptr => wasm.__wbg_blake3_free(ptr));
+const HashIdFinalization = new FinalizationRegistry(ptr => wasm.__wbg_hashid_free(ptr));
 /**
 */
-class Blake3 {
+class HashId {
 
     static __wrap(ptr) {
-        const obj = Object.create(Blake3.prototype);
+        const obj = Object.create(HashId.prototype);
         obj.ptr = ptr;
-        Blake3Finalization.register(obj, obj.ptr, obj);
+        HashIdFinalization.register(obj, obj.ptr, obj);
         return obj;
     }
 
     __destroy_into_raw() {
         const ptr = this.ptr;
         this.ptr = 0;
-        Blake3Finalization.unregister(this);
+        HashIdFinalization.unregister(this);
         return ptr;
     }
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_blake3_free(ptr);
+        wasm.__wbg_hashid_free(ptr);
     }
     /**
     */
     constructor() {
-        const ret = wasm.blake3_new();
-        return Blake3.__wrap(ret);
+        const ret = wasm.hashid_new();
+        return HashId.__wrap(ret);
     }
     /**
-    * @param {Uint8Array} input
+    * @param {Uint8Array} key
+    * @param {number} val
     */
-    update(input) {
-        const ptr0 = passArray8ToWasm0(input, wasm.__wbindgen_malloc);
+    set(key, val) {
+        const ptr0 = passArray8ToWasm0(key, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.blake3_update(this.ptr, ptr0, len0);
+        wasm.hashid_set(this.ptr, ptr0, len0, val);
+    }
+    /**
+    * @param {Uint8Array} key
+    * @returns {number | undefined}
+    */
+    get(key) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passArray8ToWasm0(key, wasm.__wbindgen_malloc);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.hashid_get(retptr, this.ptr, ptr0, len0);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1 >>> 0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
     }
     /**
     * @returns {Uint8Array}
     */
-    finalize() {
+    dump() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.blake3_finalize(retptr, this.ptr);
+            wasm.hashid_dump(retptr, this.ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v0 = getArrayU8FromWasm0(r0, r1).slice();
@@ -114,8 +113,18 @@ class Blake3 {
             wasm.__wbindgen_add_to_stack_pointer(16);
         }
     }
+    /**
+    * @param {Uint8Array} bin
+    * @returns {HashId}
+    */
+    static load(bin) {
+        const ptr0 = passArray8ToWasm0(bin, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.hashid_load(ptr0, len0);
+        return HashId.__wrap(ret);
+    }
 }
-module.exports.Blake3 = Blake3;
+module.exports.HashId = HashId;
 
 module.exports.__wbindgen_throw = function(arg0, arg1) {
     throw new Error(getStringFromWasm0(arg0, arg1));

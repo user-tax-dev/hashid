@@ -1,27 +1,37 @@
 #[allow(non_snake_case)]
-use blake3::{hash, Hasher};
+use std::collections::BTreeMap;
+
+use speedy::{Readable, Writable};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub struct Blake3(Hasher);
+#[derive(PartialEq, Debug, Readable, Writable)]
+pub struct HashId(BTreeMap<Box<[u8]>, u32>);
 
 #[wasm_bindgen]
-impl Blake3 {
+impl HashId {
   #[wasm_bindgen(constructor)]
   pub fn new() -> Self {
-    Self(Hasher::new())
+    Self(BTreeMap::new())
   }
 
-  pub fn update(&mut self, input: &[u8]) {
-    self.0.update(&input);
+  pub fn set(&mut self, key: &[u8], val: u32) {
+    self.0.insert(Box::from(key), val);
   }
 
-  pub fn finalize(&self) -> Box<[u8]> {
-    Box::<[u8]>::from(&self.0.finalize().as_bytes()[..])
+  pub fn get(&self, key: &[u8]) -> Option<u32> {
+    match self.0.get(key) {
+      Some(r) => Some(*r),
+      None => None,
+    }
   }
-}
 
-#[wasm_bindgen]
-pub fn blake3Hash(input: &[u8]) -> Box<[u8]> {
-  Box::<[u8]>::from(&hash(input).as_bytes()[..])
+  pub fn dump(&self) -> Vec<u8> {
+    self.write_to_vec().unwrap()
+  }
+
+  #[wasm_bindgen]
+  pub fn load(bin: &[u8]) -> HashId {
+    HashId::read_from_buffer(bin).unwrap()
+  }
 }

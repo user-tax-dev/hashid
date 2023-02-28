@@ -1,23 +1,29 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* @param {Uint8Array} input
-* @returns {Uint8Array}
 */
-export function blake3Hash(input: Uint8Array): Uint8Array;
-/**
-*/
-export class Blake3 {
+export class HashId {
   free(): void;
 /**
 */
   constructor();
 /**
-* @param {Uint8Array} input
+* @param {Uint8Array} key
+* @param {number} val
 */
-  update(input: Uint8Array): void;
+  set(key: Uint8Array, val: number): void;
+/**
+* @param {Uint8Array} key
+* @returns {number | undefined}
+*/
+  get(key: Uint8Array): number | undefined;
 /**
 * @returns {Uint8Array}
 */
-  finalize(): Uint8Array;
+  dump(): Uint8Array;
+/**
+* @param {Uint8Array} bin
+* @returns {HashId}
+*/
+  static load(bin: Uint8Array): HashId;
 }
