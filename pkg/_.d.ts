@@ -1,38 +1,23 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
+* @param {Uint8Array} input
+* @returns {Uint8Array}
 */
-export class BinSet {
+export function blake3Hash(input: Uint8Array): Uint8Array;
+/**
+*/
+export class Blake3 {
   free(): void;
 /**
 */
   constructor();
 /**
-* @param {Uint8Array} val
-* @returns {boolean}
+* @param {Uint8Array} input
 */
-  add(val: Uint8Array): boolean;
-/**
-* @param {Uint8Array} val
-* @returns {boolean}
-*/
-  has(val: Uint8Array): boolean;
-/**
-* @param {Uint8Array} val
-* @returns {boolean}
-*/
-  delete(val: Uint8Array): boolean;
+  update(input: Uint8Array): void;
 /**
 * @returns {Uint8Array}
 */
-  dump(): Uint8Array;
-/**
-* @param {Uint8Array} li
-* @param {number} n
-* @returns {BinSet}
-*/
-  static load(li: Uint8Array, n: number): BinSet;
-/**
-*/
-  readonly size: number;
+  finalize(): Uint8Array;
 }

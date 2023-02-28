@@ -1,10 +1,10 @@
 {
-  "name": "@u7/wasm-set",
-  "version": "0.0.9",
+  "name": "@u7/blake3",
+  "version": "0.0.1",
   "main": "_.js",
   "license": "Apache-2.0",
-  "repository": "https://github.com/iuser-dev/wasm-set",
-  "author": "i@rmw.link",
+  "repository": "https://github.com/user-tax-dev/blake3",
+  "author": "i@user.tax",
   "exports": {
     ".": "./_.js",
     "./*": "./*"

@@ -1,35 +1,12 @@
 #!/usr/bin/env coffee
 
-> ./pkg/_ > BinSet
+> ./pkg/_ > Blake3 blake3Hash
 
-set = new BinSet
+hash = new Blake3
 
-txt = """set.add(Buffer.from [1])
-set.has([2])
-set.has([1])
-set.add(new Uint8Array([1]))
-set.has([1])
-set.size
-set.dump()
-BinSet.load(set.dump(),1).size
-set.delete([1])
-set.size
-set.has([1])
-set.delete([1])
-set.has([2])""".split('\n')
+hash.update new Uint8Array(1)
+hash.update new Uint8Array(2)
 
-[
-  set.add(Buffer.from [1])
-  set.has([2])
-  set.has([1])
-  set.add(new Uint8Array([1]))
-  set.has([1])
-  set.dump()
-  set.size
-  BinSet.load(set.dump(),1).size
-  set.delete([1])
-  set.size
-  set.has([1])
-  set.delete([1])
-  set.has([2])
-].map (i,pos)=>console.log(txt[pos],'=',i)
+console.log hash.finalize()
+
+console.log blake3Hash(new Uint8Array(3))

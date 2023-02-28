@@ -1,6 +1,6 @@
 # wasm-set
 
-wasm wrapper for rust BTreeSet https://doc.rust-lang.org/std/collections/struct.BTreeSet.html
+wasm wrapper for rust [blake3](https://docs.rs/blake3/latest/blake3/)
 
 use :
 > ./test.coffee

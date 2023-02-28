@@ -41,80 +41,70 @@ function getInt32Memory0() {
 function getArrayU8FromWasm0(ptr, len) {
     return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
 }
+/**
+* @param {Uint8Array} input
+* @returns {Uint8Array}
+*/
+module.exports.blake3Hash = function(input) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passArray8ToWasm0(input, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.blake3Hash(retptr, ptr0, len0);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v1 = getArrayU8FromWasm0(r0, r1).slice();
+        wasm.__wbindgen_free(r0, r1 * 1);
+        return v1;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
 
-const BinSetFinalization = new FinalizationRegistry(ptr => wasm.__wbg_binset_free(ptr));
+const Blake3Finalization = new FinalizationRegistry(ptr => wasm.__wbg_blake3_free(ptr));
 /**
 */
-class BinSet {
+class Blake3 {
 
     static __wrap(ptr) {
-        const obj = Object.create(BinSet.prototype);
+        const obj = Object.create(Blake3.prototype);
         obj.ptr = ptr;
-        BinSetFinalization.register(obj, obj.ptr, obj);
+        Blake3Finalization.register(obj, obj.ptr, obj);
         return obj;
     }
 
     __destroy_into_raw() {
         const ptr = this.ptr;
         this.ptr = 0;
-        BinSetFinalization.unregister(this);
+        Blake3Finalization.unregister(this);
         return ptr;
     }
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_binset_free(ptr);
+        wasm.__wbg_blake3_free(ptr);
     }
     /**
     */
     constructor() {
-        const ret = wasm.binset_new();
-        return BinSet.__wrap(ret);
+        const ret = wasm.blake3_new();
+        return Blake3.__wrap(ret);
     }
     /**
-    * @param {Uint8Array} val
-    * @returns {boolean}
+    * @param {Uint8Array} input
     */
-    add(val) {
-        const ptr0 = passArray8ToWasm0(val, wasm.__wbindgen_malloc);
+    update(input) {
+        const ptr0 = passArray8ToWasm0(input, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.binset_add(this.ptr, ptr0, len0);
-        return ret !== 0;
-    }
-    /**
-    * @param {Uint8Array} val
-    * @returns {boolean}
-    */
-    has(val) {
-        const ptr0 = passArray8ToWasm0(val, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.binset_has(this.ptr, ptr0, len0);
-        return ret !== 0;
-    }
-    /**
-    * @param {Uint8Array} val
-    * @returns {boolean}
-    */
-    delete(val) {
-        const ptr0 = passArray8ToWasm0(val, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.binset_delete(this.ptr, ptr0, len0);
-        return ret !== 0;
-    }
-    /**
-    * @returns {number}
-    */
-    get size() {
-        const ret = wasm.binset_size(this.ptr);
-        return ret >>> 0;
+        wasm.blake3_update(this.ptr, ptr0, len0);
     }
     /**
     * @returns {Uint8Array}
     */
-    dump() {
+    finalize() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.binset_dump(retptr, this.ptr);
+            wasm.blake3_finalize(retptr, this.ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v0 = getArrayU8FromWasm0(r0, r1).slice();
@@ -124,19 +114,8 @@ class BinSet {
             wasm.__wbindgen_add_to_stack_pointer(16);
         }
     }
-    /**
-    * @param {Uint8Array} li
-    * @param {number} n
-    * @returns {BinSet}
-    */
-    static load(li, n) {
-        const ptr0 = passArray8ToWasm0(li, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.binset_load(ptr0, len0, n);
-        return BinSet.__wrap(ret);
-    }
 }
-module.exports.BinSet = BinSet;
+module.exports.Blake3 = Blake3;
 
 module.exports.__wbindgen_throw = function(arg0, arg1) {
     throw new Error(getStringFromWasm0(arg0, arg1));
